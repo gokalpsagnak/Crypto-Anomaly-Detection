@@ -1,46 +1,117 @@
 # Crypto Anomaly Detection Pipeline
 
-> **A robust anomaly detection pipeline for cryptocurrency markets using Statistical Methods, Supervised/Unsupervised LSTM, and Hybrid Autoencoders with a strict focus on preventing data leakage.**
+> **A robust anomaly detection pipeline for cryptocurrency markets using
+> statistical methods, supervised/unsupervised LSTM models, and hybrid
+> autoencoders --- with a strict focus on preventing data leakage.**
 
----
+------------------------------------------------------------------------
 
 ## 🚀 Proje Hakkında (Overview)
 
-Bu proje, kripto para piyasalarındaki (BTC/USDT) fiyat hareketlerini analiz ederek **Anomaly Detection** gerçekleştiren uçtan uca bir pipeline sunar. Projenin temel amacı, hem geleneksel istatistiksel yöntemleri hem de modern derin öğrenme (Deep Learning) mimarilerini kullanarak piyasadaki aykırı hareketleri tespit etmektir.
+Bu proje, kripto para piyasalarındaki (özellikle **BTC/USDT**) fiyat
+hareketlerini analiz ederek **Anomaly Detection** gerçekleştiren uçtan
+uca bir pipeline sunar.
 
-En kritik özelliği, zaman serisi çalışmalarında sıkça yapılan **Data Leakage** (veri sızıntısı) hatasını; veri ölçeklendirme (scaling) ve model eğitimi süreçlerini tamamen izole ederek çözmesidir.
+Temel amaç; - Geleneksel **istatistiksel yöntemleri** - Modern **derin
+öğrenme (Deep Learning)** mimarilerini
+
+bir arada kullanarak piyasadaki **olağan dışı (aykırı) hareketleri**
+tespit etmektir.
+
+Projenin en kritik özelliği, zaman serisi çalışmalarında sıkça yapılan
+**Data Leakage (veri sızıntısı)** hatasını önlemesidir.\
+Bu, özellikle: - **Scaling** - **Train / Test ayrımı** - **Model
+eğitimi**
+
+adımlarının zamansal bütünlük korunarak tamamen izole edilmesiyle
+sağlanmıştır.
+
+------------------------------------------------------------------------
 
 ## 🛠 Kullanılan Metotlar (Methodology)
 
-Proje içerisinde 4 farklı yaklaşım entegre edilmiştir:
+Pipeline içerisinde **4 farklı yaklaşım** entegre edilmiştir:
 
-1.  **Statistical Methods:**
-    * **Z-Score:** Standart sapma üzerinden anlık fiyat sapmalarını yakalar.
-    * **EWMA (Exponentially Weighted Moving Average):** Dinamik bir hareketli ortalama kullanarak trend dışı hareketleri belirler.
-2.  **Unsupervised LSTM (Forecasting):**
-    * Model, geçmiş veriye bakarak bir sonraki fiyatı tahmin eder. **Prediction Error** belirli bir **Threshold** (eşik) değerini aştığında bu noktaları anomali olarak tanımlar.
-3.  **Supervised LSTM (Classification):**
-    * İstatistiksel metotlardan elde edilen etiketleri (ground truth) kullanarak, yeni verilerin anomali olup olmadığını sınıflandırır.
-4.  **Hybrid Autoencoder + OCSVM:**
-    * **LSTM Autoencoder** veriyi düşük boyutlu bir temsil alanına (**Latent Space**) sıkıştırır. **One-Class SVM** ise bu alandaki aykırı noktaları yüksek hassasiyetle yakalar.
+### 1️⃣ Statistical Methods
 
----
+-   **Z-Score**\
+    Standart sapma tabanlı sapmaları yakalayarak ani fiyat hareketlerini
+    tespit eder.
+-   **EWMA (Exponentially Weighted Moving Average)**\
+    Dinamik ağırlıklı ortalama ile trend dışı davranışları belirler.
+
+### 2️⃣ Unsupervised LSTM (Forecasting-Based)
+
+-   Model, geçmiş zaman adımlarını kullanarak **bir sonraki fiyatı
+    tahmin eder**.
+-   **Prediction Error**, belirlenen bir **threshold** değerini
+    aştığında ilgili zaman noktası **anomali** olarak işaretlenir.
+-   Etiket gerektirmeyen, tamamen **unsupervised** bir yaklaşımdır.
+
+### 3️⃣ Supervised LSTM (Classification-Based)
+
+-   İstatistiksel yöntemlerden elde edilen anomali etiketleri **ground
+    truth** olarak kullanılır.
+-   Model, yeni gelen verinin **normal mi anomali mi** olduğunu doğrudan
+    sınıflandırır.
+-   Zamansal bağımlılıkları öğrenebilen bir **sequence classification**
+    problemidir.
+
+### 4️⃣ Hybrid: LSTM Autoencoder + One-Class SVM
+
+-   **LSTM Autoencoder**, zaman serisini düşük boyutlu bir **latent
+    space**'e sıkıştırır.
+-   **One-Class SVM (OCSVM)**, bu latent uzaydaki aykırı noktaları
+    yüksek hassasiyetle tespit eder.
+-   Özellikle **non-linear** ve karmaşık anomaliler için güçlü bir
+    hibrit yaklaşımdır.
+
+------------------------------------------------------------------------
 
 ## 📂 Dosya Yapısı (File Structure)
 
-* `main.py`: Projenin giriş noktası. Tüm akışı (Data fetch -> Preprocess -> Training -> Evaluation) yönetir.
-* `config.py`: Tüm **Hyperparameters** (epoch, batch size, thresholds) ayarlarının yapıldığı merkez.
-* `statistic.py`: Veri çekme (CCXT) ve **Feature Engineering** modülü.
-* `lstm_AE.py`: Autoencoder ve OCSVM hibrit model mimarisi.
-* `lstm_unsupervised.py`: Tahmin tabanlı LSTM operasyonları.
-* `lstm_supervised.py`: Sınıflandırma odaklı LSTM yapısı.
-* `evaluation.py`: **ROC-AUC**, **Precision-Recall** ve **F1-Score** hesaplama ve görselleştirme araçları.
-* `graphs.py`: Anomali sonuçlarının fiyat grafiği üzerinde görselleştirilmesi.
+    .
+    ├── main.py               # Pipeline giriş noktası (data → train → evaluate)
+    ├── config.py             # Tüm hyperparameter ayarları
+    ├── statistic.py          # Veri çekme (CCXT) ve feature engineering
+    ├── lstm_unsupervised.py  # Forecasting tabanlı LSTM
+    ├── lstm_supervised.py    # Classification tabanlı LSTM
+    ├── lstm_AE.py            # LSTM Autoencoder + OCSVM
+    ├── evaluation.py         # ROC-AUC, PR, F1-score hesaplamaları
+    └── graphs.py             # Anomali görselleştirmeleri
 
----
+------------------------------------------------------------------------
 
-## ⚙️ Kurulum ve Kullanım (Setup)
+## ⚙️ Kurulum ve Kullanım (Setup & Usage)
 
-### 1. Gereksinimleri Yükleyin
-```bash
+### 1️⃣ Gereksinimleri Yükleyin
+
+``` bash
 pip install ccxt pandas numpy tensorflow scikit-learn matplotlib seaborn
+```
+
+### 2️⃣ Projeyi Çalıştırın
+
+``` bash
+python main.py
+```
+
+------------------------------------------------------------------------
+
+## 📊 Değerlendirme (Evaluation)
+
+Model performansı aşağıdaki metriklerle değerlendirilir: - **ROC-AUC** -
+**Precision -- Recall Curve** - **F1-Score**
+
+Anomali tespit sonuçları, fiyat serisi üzerinde **görsel olarak** da
+analiz edilebilir.
+
+------------------------------------------------------------------------
+
+## 🔒 Data Leakage Önleme Stratejisi
+
+-   Scaling **sadece training set** üzerinde yapılır\
+-   Test verisi geleceği temsil eder, geçmişten bilgi sızdırılmaz\
+-   Sliding window yapıları zamansal sırayı bozmadan oluşturulur
+
+Bu sayede sonuçlar **gerçekçi ve güvenilir** kalır.
