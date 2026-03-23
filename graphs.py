@@ -68,7 +68,7 @@ def plot_unsupervised_vs_statistical(
 
     plt.figure(figsize=(14, 6))
 
-    # --- Real prices ---
+    # --- Gerçek fiyat ---
     plt.plot(
         df_stat.index,
         df_stat["Close"],
@@ -77,7 +77,7 @@ def plot_unsupervised_vs_statistical(
         alpha=0.6
     )
 
-    # --- Unsupervised LSTM anomalies ---
+    # --- Unsupervised LSTM anomalileri ---
     lstm_anom = out[out["Anomaly_LSTM"] == 1]
     plt.scatter(
         lstm_anom.index,
@@ -89,7 +89,7 @@ def plot_unsupervised_vs_statistical(
         zorder=3
     )
 
-    # --- Statistical anomalies (Z-score OR EWMA) ---
+    # --- Statistical anomaliler (Z-score OR EWMA) ---
     stat_anom = df_stat[
         (df_stat["Anomaly_ZScore"] == 1) |
         (df_stat["Anomaly_EWMA"] == 1)
@@ -131,7 +131,7 @@ def plot_supervised_vs_statistical(
 
     plt.figure(figsize=(14, 6))
 
-    # --- Real prices ---
+    # --- Gerçek fiyat ---
     plt.plot(
         df_stat.index,
         df_stat["Close"],
@@ -140,7 +140,7 @@ def plot_supervised_vs_statistical(
         alpha=0.6
     )
 
-    # --- Supervised LSTM anomalies ---
+    # --- Supervised LSTM anomalileri ---
     if use_prob:
         sup_anom = out_sup[out_sup["Anomaly_Prob"] >= prob_threshold]
         label_sup = f"Supervised LSTM Anomaly (prob>={prob_threshold})"
@@ -148,7 +148,7 @@ def plot_supervised_vs_statistical(
         sup_anom = out_sup[out_sup["Anomaly_Pred"] == 1]
         label_sup = "Supervised LSTM Anomaly"
 
-    # There is no Close on the out_sup side; We pull Close from df_stat using index
+    # out_sup tarafında Close yok; Close'u df_stat'tan index ile çekiyoruz
     sup_close = df_stat.reindex(sup_anom.index)["Close"]
 
     plt.scatter(
@@ -161,7 +161,7 @@ def plot_supervised_vs_statistical(
         zorder=3
     )
 
-    # --- Statistical anomalies (Z-score OR EWMA) ---
+    # --- Statistical anomaliler (Z-score OR EWMA) ---
     stat_anom = df_stat[
         (df_stat["Anomaly_ZScore"] == 1) |
         (df_stat["Anomaly_EWMA"] == 1)
@@ -199,7 +199,7 @@ def plot_price_unsupervised_vs_statistical(
 
     plt.figure(figsize=(14, 6))
 
-    # --- Real prices ---
+    # --- Gerçek fiyat ---
     plt.plot(
         out_last.index,
         out_last["Close_True"],
@@ -208,7 +208,7 @@ def plot_price_unsupervised_vs_statistical(
         linewidth=2
     )
 
-    # --- LSTM prediction ---
+    # --- LSTM tahmini ---
     plt.plot(
         out_last.index,
         out_last["Close_Pred"],
@@ -265,11 +265,11 @@ def plot_supervised_vs_statisticall(
 ):
     plt.figure(figsize=(14, 6))
 
-    # --- LSTM TESTING PERIOD ONLY ---
+    # --- SADECE LSTM TEST DÖNEMİ ---
     start_idx = out_sup.index.min()
     df_plot = df_stat.loc[start_idx:]
 
-    # --- Real prices (ONLY LAST HUNDRED DAYS) ---
+    # --- Gerçek fiyat (SADECE SON 100 GÜN) ---
     plt.plot(
         df_plot.index,
         df_plot["Close"],
@@ -278,7 +278,7 @@ def plot_supervised_vs_statisticall(
         alpha=0.6
     )
 
-    # --- Supervised LSTM anomalies ---
+    # --- Supervised LSTM anomalileri ---
     if use_prob:
         sup_anom = out_sup[out_sup["Anomaly_Prob"] >= prob_threshold]
         label_sup = f"Supervised LSTM Anomaly (prob>={prob_threshold})"
@@ -298,7 +298,7 @@ def plot_supervised_vs_statisticall(
         zorder=3
     )
 
-    # --- Statistical anomalies (same time interval) ---
+    # --- Statistical anomaliler (aynı zaman aralığı) ---
     stat_anom = df_plot[
         (df_plot["Anomaly_ZScore"] == 1) |
         (df_plot["Anomaly_EWMA"] == 1)

@@ -98,7 +98,9 @@ def build_supervised_lstm(input_shape):
     Build supervised LSTM model for binary classification
     """
     model = Sequential([
-        LSTM(64, return_sequences=False, input_shape=input_shape),
+        LSTM(64, return_sequences=True, input_shape=input_shape),
+        Dropout(0.2),
+        LSTM(32, return_sequences=False),
         Dropout(0.2),
         Dense(1, activation="sigmoid")
     ])

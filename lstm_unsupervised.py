@@ -27,7 +27,7 @@ def unsupervised_lstm_dataset(df, lookback=100, train_ratio=0.9):
     
     CRITICAL: Scaling ONLY on training data to prevent data leakage!
     """
-    # ---------- Feature selection (same as supervised) ----------
+    # ---------- Feature seçimi (supervised ile AYNI) ----------
     FEATURE_COLS = [
         c for c in df.columns
         if not c.startswith("Anomaly") and c != "Anomaly_Statistical"
@@ -57,13 +57,13 @@ def unsupervised_lstm_dataset(df, lookback=100, train_ratio=0.9):
     x_scaler = StandardScaler()
     y_scaler = StandardScaler()
     
-    #  FIT ONLY ON TRAIN DATA
+    # FIT ONLY ON TRAIN DATA
     x_scaler.fit(data_train.values)
     
     close_idx = FEATURE_COLS.index("Close")
     y_scaler.fit(data_train.iloc[:, close_idx].values.reshape(-1, 1))
     
-    #  TRANSFORM BOTH TRAIN AND TEST
+    # TRANSFORM BOTH TRAIN AND TEST
     data_scaled = x_scaler.transform(data.values)
     close_scaled = y_scaler.transform(
         data.iloc[:, close_idx].values.reshape(-1, 1)
@@ -95,7 +95,6 @@ def unsupervised_lstm_dataset(df, lookback=100, train_ratio=0.9):
 
 def build_unsupervised_lstm(input_shape):
     """
-    Düz LSTM regression modeli: yarınki Close'u tahmin eder.
     input_shape = (lookback, n_features)
     """
     model = Sequential([
@@ -111,7 +110,7 @@ def build_unsupervised_lstm(input_shape):
 
 def train_unsupervised_lstm(X, y, use_early_stopping=True, epochs=100, batch_size=16):
     """
-    Veriyi shuffle etmeden (time-series) train/val ayırır ve eğitir.
+    Train unsupervised LSTM model for time-series forecasting
     """
     n = X.shape[0]
     split = int(n * 0.9)

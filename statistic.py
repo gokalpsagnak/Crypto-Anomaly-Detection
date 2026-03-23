@@ -364,7 +364,7 @@ if __name__ == "__main__":
             ewma_k=2.0,
             create_labels=True  # Create anomaly labels
         )
-        print(f"✅ Ready for supervised LSTM training")
+        print(f"   Ready for supervised LSTM training")
         print(f"   Features: {len(df_supervised.columns)} columns")
         print(f"   Target: Anomaly_Statistical column")
         
@@ -375,9 +375,9 @@ if __name__ == "__main__":
         df_unsupervised, split_idx = data_preprocessing_and_feature_engineering(
             df_raw.copy(),
             train_ratio=0.9,
-            create_labels=False  # ✅ Skip label creation
+            create_labels=False  # Skip label creation
         )
-        print(f"✅ Ready for unsupervised LSTM training")
+        print(f"   Ready for unsupervised LSTM training")
         print(f"   Features: {len(df_unsupervised.columns)} columns")
         print(f"   No labels (unsupervised)")
         
@@ -388,7 +388,7 @@ if __name__ == "__main__":
             print("\n[VISUALIZATION] Plotting anomalies...")
             # plot_zscore_anomaly(df_supervised, tail=200)
             # plot_ewma_anomaly(df_supervised, tail=200)
-            print("✅ (Uncomment to show plots)")
+            print("  (Uncomment to show plots)")
         
         print("\n" + "="*80)
         print("PREPROCESSING COMPLETE - NO DATA LEAKAGE!")
